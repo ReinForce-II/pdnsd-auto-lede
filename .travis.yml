@@ -10,4 +10,4 @@ script:
 - export STAGING_DIR=/opt/lede-sdk-17.01.0-rc2-kirkwood_gcc-5.4.0_musl-1.1.16_eabi.Linux-x86_64/staging_dir/toolchain-arm_xscale_gcc-5.4.0_musl-1.1.16_eabi
 - cd pdnsd
 - ./configure --build=x86_64-unknown-linux-gnu -host=arm-openwrt-linux-muslgnueabi
-- make -j2
+- make
