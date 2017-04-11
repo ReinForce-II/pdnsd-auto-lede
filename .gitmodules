@@ -1,0 +1,3 @@
+[submodule "pdnsd"]
+	path = pdnsd
+	url = https://gitorious.org/pdnsd/pdnsd.git
