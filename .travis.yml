@@ -4,10 +4,23 @@ compiler:
 before_install:
 - git submodule update --init --recursive
 install:
-- wget https://downloads.lede-project.org/releases/17.01.0-rc2/targets/kirkwood/generic/lede-sdk-17.01.0-rc2-kirkwood_gcc-5.4.0_musl-1.1.16_eabi.Linux-x86_64.tar.xz -O - | tar xJf - -C .
+- wget https://downloads.lede-project.org/releases/17.01.0-rc2/targets/kirkwood/generic/lede-sdk-17.01.0-rc2-kirkwood_gcc-5.4.0_musl-1.1.16_eabi.Linux-x86_64.tar.xz
+  -O - | tar xJf - -C .
 script:
 - export PATH=$PATH:../lede-sdk-17.01.0-rc2-kirkwood_gcc-5.4.0_musl-1.1.16_eabi.Linux-x86_64/staging_dir/toolchain-arm_xscale_gcc-5.4.0_musl-1.1.16_eabi/bin
 - export STAGING_DIR=../lede-sdk-17.01.0-rc2-kirkwood_gcc-5.4.0_musl-1.1.16_eabi.Linux-x86_64/staging_dir/toolchain-arm_xscale_gcc-5.4.0_musl-1.1.16_eabi
 - cd pdnsd
-- ./configure --build=x86_64-unknown-linux-gnu -host=arm-openwrt-linux-muslgnueabi
+- "./configure --build=x86_64-unknown-linux-gnu -host=arm-openwrt-linux-muslgnueabi"
 - make
+after_success:
+- cp src/pdnsd ../
+- cp src/pdnsd-ctl/pdnsd-ctl ../
+- cd ..
+- tar czf release.tar.gz pdnsd pdnsd-ctl
+deploy:
+  provider: releases
+  api_key:
+    secure: TDdGr6Rni5R5mNbSq0FFevd51tGQBnaD7MbdNOxkPzcyyKxSuimNDepTwiV5QWfIfWtcZSLbSVwVPxeNCG700ZFBPSm0ZJDwuNYJ+662wMZiUPUXu2IrKSNhuvzHND6biwihBtYnv1UD3KBxy81eyStHb22b/OlSrRBDFFBV8O+LUcWgqlqNS8UgLq0areoXGu+7eiuP+iQbPfmzRUiKGhXgvbcTTrencEisVURd714OrZWYeQILC0Fvo5LYoL9/tKTRt4F5IX487us/mwkZJJ5jFpKleyXQzGKnqbkPq2EaGKCjhYX3nReswxOiESbcUz9BC91ZcXJkSyjw1Gq1KzdlT01CL4jd7FrcxtCX+zHIwDsBQgikq4y56jbfUJ0J8mgnEc3jc5ybEV/3mfbU2wNagaPbqGqndL0Hh4AsDCBZNEo0ORRxqS6Ar2d1x5AzdsSap7wxazhzYtrCPy2DV0omLaS2o0UA2oC09yMI2Y5p0khEhge2i95ISwdgHm1BBPsiXAhnfjUyCfRvLhdwlJhV1MqZktGtEJEimdELfd54P1WsnvwGBucDJkb5ms5ERHINU5beGxZUHJSiIN/ZIC33PufyxEUzvOZqHdDvdPeLB/MeEXi9sU2P2VEDAojZOrmxbFN8HMSHsvtfZeBkXKkKC3xsYKjFUS0XqgPrVWI=
+  file: release.tar.gz
+  on:
+    repo: ReinForce-II/pdnsd-auto-lede
